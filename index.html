@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Anonymous project page for AxisPose++, a reference-anchored tri-axis method for single-reference unseen-object rotation estimation.">
+  <meta name="theme-color" content="#08111e">
+  <title>AxisPose++ | Anonymous Project Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308111e'/%3E%3Cpath d='M32 32 12 45M32 32 48 18M32 32 34 55' stroke='%23f05252' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 32 12 45' stroke='%234ade80' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 32 48 18' stroke='%2360a5fa' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23f6cb4b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AxisPose++ home"><span class="brand-mark"><i></i><i></i><i></i><b></b></span>AxisPose<span>++</span></a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Primary navigation">
+      <a href="#idea">Idea</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#efficiency">Efficiency</a>
+      <a href="#qualitative">Visuals</a>
+      <a class="nav-code" href="https://github.com/anonymous-pose/Axispose_plus_plus" target="_blank" rel="noopener">Code <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="pulse"></span> Anonymous ICLR 2027 submission</p>
+        <h1>Recover 3D rotation through <em>reference-anchored axes.</em></h1>
+        <p class="hero-lede">AxisPose++ estimates the 3D rotation of an unseen object from one posed reference image by predicting its reference-defined tri-axis in the target view and enforcing 3D geometric consistency.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#method">Explore the method <span aria-hidden="true">↓</span></a>
+          <a class="button button-quiet" href="https://github.com/anonymous-pose/Axispose_plus_plus" target="_blank" rel="noopener">Anonymous code <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-notes">
+          <span>Single reference</span><span>Unseen categories</span><span>3D rotation</span>
+        </div>
+      </div>
+      <figure class="hero-figure reveal figure-button" data-image="assets/teaser.png" tabindex="0" role="button" aria-label="Open method overview figure">
+        <img src="assets/teaser.png" alt="Comparison of pose-estimation paradigms and overview of AxisPose++">
+        <figcaption><span>AxisPose++</span><small>Reference-anchored rotation estimation</small></figcaption>
+      </figure>
+    </section>
+
+    <section class="statement-band">
+      <div class="shell statement-grid">
+        <p>A posed reference defines the coordinate convention, but the target image provides only an ambiguous 2D projection of the unknown 3D rotation.</p>
+        <p>AxisPose++ predicts <strong>reference-anchored tri-axis evidence</strong> in the target view, then resolves it through constrained 3D reconstruction.</p>
+      </div>
+    </section>
+
+    <section class="section shell" id="idea">
+      <div class="section-head reveal">
+        <p class="eyebrow">Why reference-anchored axes</p>
+        <h2>A reference-anchored tri-axis provides a stable target for rotation estimation.</h2>
+      </div>
+      <div class="problem-grid">
+        <article class="problem-card reveal">
+          <span class="index">01</span>
+          <h3>The reference defines the coordinates</h3>
+          <p>The known reference pose and its tri-axis establish the coordinate convention in which the target rotation is estimated.</p>
+        </article>
+        <article class="problem-card reveal">
+          <span class="index">02</span>
+          <h3>Axis evidence can be ambiguous</h3>
+          <p>Each likelihood field may contain several plausible axis directions, producing multiple image-space explanations of the target orientation.</p>
+        </article>
+        <article class="problem-card reveal">
+          <span class="index">03</span>
+          <h3>Geometry resolves the ambiguity</h3>
+          <p>TACB reconstructs orthogonal 3D frames from candidate directions, and HAAS selects the rotation best supported by the predicted evidence.</p>
+        </article>
+      </div>
+      <figure class="axis-ambiguity-figure reveal figure-button" data-image="assets/axis-ambiguity.png" tabindex="0" role="button" aria-label="Open axis ambiguity and hypothesis selection figure">
+        <img src="assets/axis-ambiguity.png" alt="Examples of no, one-axis, two-axis, and three-axis ambiguity resolved by hypothesis-aware axis selection">
+        <figcaption><strong>Axis ambiguity and hypothesis selection.</strong> The tri-axis fields preserve multiple plausible directions. TACB converts their combinations into 3D rotations, which HAAS ranks using geometric and field consistency.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section method-section" id="method">
+      <div class="shell">
+        <div class="method-title reveal">
+          <div>
+            <p class="eyebrow">AxisPose++</p>
+            <h2>From a posed reference to a geometrically verified rotation.</h2>
+          </div>
+          <p>RCA encodes the reference coordinate convention, T³ predicts target-view axis evidence, and GGPR reconstructs and selects the final 3D rotation.</p>
+        </div>
+        <div class="method-columns">
+          <article class="method-card reveal">
+            <div class="method-number">RCA</div>
+            <h3>Reference-Coordinate Anchoring</h3>
+            <p>Frozen DINOv2 features, the rendered reference tri-axis, and the reference pose form a condition that retains appearance and coordinate information.</p>
+            <span class="method-line red-line"></span>
+          </article>
+          <article class="method-card reveal">
+            <div class="method-number">T³</div>
+            <h3>Target-View Tri-Axis Transport</h3>
+            <p>A multi-scale conditioned U-Net predicts dense likelihood fields for the three axes and their shared origin, together with global image-plane geometry.</p>
+            <span class="method-line green-line"></span>
+          </article>
+          <article class="method-card reveal">
+            <div class="method-number">GGPR</div>
+            <h3>Geometry-Grounded Pose Recovery</h3>
+            <p>TACB reconstructs 3D rotations from plausible axis configurations, and HAAS ranks them using projection consistency, likelihood support, and algebraic stability.</p>
+            <span class="method-line blue-line"></span>
+          </article>
+        </div>
+        <figure class="pipeline-figure reveal figure-button" data-image="assets/pipeline.png" tabindex="0" role="button" aria-label="Open full AxisPose++ pipeline figure">
+          <img src="assets/pipeline.png" alt="AxisPose++ pipeline from reference coordinate anchoring through tri-axis likelihood fields to geometric pose recovery">
+          <figcaption><strong>End-to-end pipeline.</strong> AxisPose++ predicts dense and global tri-axis evidence in the target view, then reconstructs and ranks geometrically valid pose hypotheses.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section shell geometry-section">
+      <div class="geometry-copy reveal">
+        <p class="eyebrow">From evidence to rotation</p>
+        <h2>Resolve ambiguous 2D axes through 3D geometry.</h2>
+        <p>Dense likelihood fields retain plausible axis directions instead of committing to one 2D endpoint. TACB combines candidate directions and sampled extents to reconstruct orthogonal 3D rotations. HAAS then ranks the valid hypotheses against the predicted evidence.</p>
+        <div class="geometry-points">
+          <div><b>TLF</b><span>Dense local likelihood + global direction</span></div>
+          <div><b>TACB</b><span>Orthogonal back-projection hypotheses</span></div>
+          <div><b>HAAS</b><span>Hypothesis-aware axis selection</span></div>
+        </div>
+      </div>
+      <div class="geometry-sketch reveal" aria-hidden="true">
+        <svg viewBox="0 0 500 430" role="img">
+          <defs><radialGradient id="glow" cx="50%" cy="46%" r="55%"><stop offset="0%" stop-color="#1d3c5f" stop-opacity=".8"/><stop offset="100%" stop-color="#091522" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="250" cy="205" r="184" fill="url(#glow)"/><circle cx="250" cy="205" r="112" fill="none" stroke="#5f7893" stroke-opacity=".35"/><circle cx="250" cy="205" r="156" fill="none" stroke="#5f7893" stroke-opacity=".2" stroke-dasharray="3 9"/>
+          <path d="M250 205 84 275" stroke="#ef5b5b" stroke-width="8" stroke-linecap="round"/><path d="M250 205 356 85" stroke="#58df91" stroke-width="8" stroke-linecap="round"/><path d="M250 205 389 305" stroke="#6fa7ff" stroke-width="8" stroke-linecap="round"/>
+          <path d="M250 205 130 116M250 205 334 355M250 205 435 159" stroke="#f4bd45" stroke-width="2" stroke-dasharray="5 9" opacity=".65"/>
+          <g fill="#f9c846"><circle cx="84" cy="275" r="8"/><circle cx="356" cy="85" r="8"/><circle cx="389" cy="305" r="8"/><circle cx="130" cy="116" r="5"/><circle cx="334" cy="355" r="5"/><circle cx="435" cy="159" r="5"/></g>
+          <circle cx="250" cy="205" r="15" fill="#f9c846"/><circle cx="250" cy="205" r="7" fill="#07111d"/>
+          <text x="65" y="315" fill="#ef8585">x candidates</text><text x="360" y="58" fill="#8cedb5">y candidates</text><text x="390" y="337" fill="#91baff">z candidates</text><text x="216" y="235" fill="#f6d66d">origin</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="results-section" id="results">
+      <div class="shell">
+        <div class="results-head reveal">
+          <div><p class="eyebrow">Reported results</p><h2>Evaluation on unseen synthetic and real-world categories.</h2></div>
+          <p>We evaluate AxisPose++ on six unseen ShapeNet categories and further test its direct transfer to NAVI and Objectron.</p>
+        </div>
+        <div class="metric-grid reveal">
+          <article><strong>68.2<span>%</span></strong><p>ShapeNet mean Acc@30</p></article>
+          <article><strong>15.4<span>°</span></strong><p>ShapeNet median angular error</p></article>
+          <article><strong>53.9<span>%</span></strong><p>Objectron mean Acc@30</p></article>
+          <article><strong>29.8<span>°</span></strong><p>Objectron median angular error</p></article>
+        </div>
+        <figure class="results-table reveal figure-button" data-image="assets/results-table.png" tabindex="0" role="button" aria-label="Open quantitative comparison table">
+          <img src="assets/results-table.png" alt="Quantitative comparison across ShapeNet, NAVI, and Objectron">
+          <figcaption>Quantitative comparisons on unseen ShapeNet categories and real-world NAVI and Objectron data. Click to inspect the full table.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section efficiency-section" id="efficiency">
+      <div class="shell efficiency-layout">
+        <div class="section-head reveal">
+          <p class="eyebrow">Efficiency</p>
+          <h2>High accuracy with practical inference speed.</h2>
+          <p class="section-copy">On ShapeNet, AxisPose++ reaches 68.2% mean Acc@30 at 2.75 FPS, placing it in the high-accuracy, high-speed region among the compared methods.</p>
+        </div>
+        <figure class="efficiency-figure reveal figure-button" data-image="assets/efficiency.png" tabindex="0" role="button" aria-label="Open accuracy and efficiency comparison">
+          <img src="assets/efficiency.png" alt="Accuracy and inference speed comparison on ShapeNet">
+          <figcaption>ShapeNet mean Acc@30 and inference speed for the compared methods.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section shell robustness-section">
+      <div class="robustness-copy reveal">
+        <p class="eyebrow">Robustness</p>
+        <h2>Robustness under blur and occlusion.</h2>
+        <p>We compare AxisPose++ directly with OrienPose, the current state-of-the-art method, under increasing blur, occlusion, and their combination. AxisPose++ shows stronger overall robustness as degradation severity increases.</p>
+      </div>
+      <figure class="robustness-figure reveal figure-button" data-image="assets/robustness.png" tabindex="0" role="button" aria-label="Open robustness evaluation figure">
+        <img src="assets/robustness.png" alt="Robustness against blur and occlusion">
+      </figure>
+    </section>
+
+    <section class="section qualitative-section" id="qualitative">
+      <div class="shell">
+        <div class="section-head reveal">
+          <p class="eyebrow">Qualitative results</p>
+          <h2>Rotation estimates on unseen synthetic and real-world objects.</h2>
+        </div>
+        <div class="qual-grid">
+          <figure class="qual-card reveal figure-button" data-image="assets/vis-shapenet.png" tabindex="0" role="button" aria-label="Open ShapeNet qualitative results">
+            <img src="assets/vis-shapenet.png" alt="ShapeNet qualitative pose comparison">
+            <figcaption><strong>Unseen ShapeNet categories</strong><span>Bus, clock, mug, washer, pistol, and train.</span></figcaption>
+          </figure>
+          <figure class="qual-card reveal figure-button" data-image="assets/vis-objectron.png" tabindex="0" role="button" aria-label="Open Objectron qualitative results">
+            <img src="assets/vis-objectron.png" alt="Objectron qualitative pose comparison">
+            <figcaption><strong>Real-world Objectron transfer</strong><span>Predicted frames are shown in red; ground truth is shown in green.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="code-section">
+      <div class="shell code-inner reveal">
+        <div><p class="eyebrow">Reproducibility</p><h2>Anonymous code and a ready-to-run ShapeNet evaluation subset.</h2></div>
+        <a class="button button-light" href="https://github.com/anonymous-pose/Axispose_plus_plus" target="_blank" rel="noopener">Open anonymous repository <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell"><span>AxisPose++</span><span>Anonymous project page</span></footer>
+
+  <dialog class="image-modal" aria-label="Expanded figure"><button class="modal-close" type="button" aria-label="Close figure">×</button><img src="" alt=""></dialog>
+  <script src="script.js"></script>
+</body>
+</html>
